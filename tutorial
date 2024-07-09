@@ -1,0 +1,9 @@
+#membuat docker compose
+docker compose create 
+
+#menjalankan docker compose
+docker compose start
+
+#melihat docker compose
+docker compose ps
+
