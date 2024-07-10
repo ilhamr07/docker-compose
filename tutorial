@@ -13,6 +13,9 @@ docker compose down
 #melihat docker compose project name
 docker compose ls
 
-#service
+#docker events
+docker events --filter 'container=mongodb-example'
 
+#docker container stats
+docker container stats
 
