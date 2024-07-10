@@ -7,3 +7,12 @@ docker compose start
 #melihat docker compose
 docker compose ps
 
+#menghapus docker compose 
+docker compose down
+
+#melihat docker compose project name
+docker compose ls
+
+#service
+
+

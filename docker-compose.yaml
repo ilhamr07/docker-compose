@@ -1,9 +1,125 @@
 version: "3.8"
 
 services:
+  #this is example nginx
   nginx-example:
     container_name: nginx-example
     image: nginx
+    ports:
+      - protocol: tcp
+        published: 8080
+        target: 80
+    #resource limit    
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.25"
+          memory: 50M
+        limits:
+          cpus: "0.5"
+          memory: 100M
+  
+  #this is example nginx2
   nginx-example2:
     container_name: nginx-example2
     image: nginx
+    ports:
+      - "8089:80"
+    #resource limit
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.25"
+          memory: 50M
+        limits:
+          cpus: "0.5"
+          memory: 100M
+  
+  #this is example postgre
+  postgres:
+    container_name: postgres
+    image: postgres:14-alpine
+    ports:
+      - 5435:5432
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=posgres2
+      - POSTGRES_DB=posgres 
+    volumes:
+      - "postgre-data1:/dev/shm" #mounting ke file data di lokal dari file container
+    #resource limit
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.25"
+          memory: 50M
+        limits:
+          cpus: "0.5"
+          memory: 100M
+    networks:
+      - network-example
+    depends_on:
+      - mongodb-express
+  
+  #this is example mongo-express
+  mongodb-express:
+    container_name: mongodb-express
+    image: mongo-express:latest
+    ports:
+      - "8081:8081"
+    environment:
+        ME_CONFIG_MONGODB_ADMINUSERNAME: root
+        ME_CONFIG_MONGODB_ADMINPASSWORD: example
+        ME_CONFIG_MONGODB_SERVER: mongodb-example
+    networks:
+      - network-mongodb
+    restart: always
+    #depends_on artinya container ini dijalankan 
+    #setelah kontainer mongodb-example selesai di jalankan
+    depends_on:
+      - mongodb-example
+    #resource limit
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.25"
+          memory: 50M
+        limits:
+          cpus: "0.5"
+          memory: 100M
+
+  #this is example mongodb
+  mongodb-example:
+    container_name: mongodb-example
+    image: mongo:latest
+    restart: always
+    ports:
+      - 8085:8081
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: admin
+    networks:
+      - network-mongodb
+    #resource limit  
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.25"
+          memory: 50M
+        limits:
+          cpus: "0.5"
+          memory: 100M
+
+volumes:
+  postgre-data1:
+    name: postgre-data1
+
+networks:
+  network-mongodb:
+    name: network-mongodb
+    driver: bridge
+  
+  network-example:
+    name: network-example
+    driver: bridge
