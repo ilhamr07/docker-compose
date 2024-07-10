@@ -7,7 +7,7 @@ services:
     image: nginx
     ports:
       - protocol: tcp
-        published: 8080
+        published: 8086
         target: 80
     #resource limit    
     deploy:
@@ -110,6 +110,17 @@ services:
         limits:
           cpus: "0.5"
           memory: 100M
+  
+  golangku:
+    container_name: golangku
+    build:
+      context: "./app"
+      dockerfile: Dockerfile
+    image: "golangku-1.0.0"
+    environment:
+      - "APP_PORT=8086"
+    ports:
+      - "8080:8080"
 
 volumes:
   postgre-data1:
